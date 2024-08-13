@@ -16,15 +16,15 @@ class DoStuff(banco_pb2_grpc.DoStuffServicer):
    # A assinatura de todos os procedimentos é igual: um objeto com os
    # parâmetros e outro com o contexto de execução do servidor
     def le_saldo(self, request, context):
-        if request.carteira not in saldo:
+        if request.carteira not in saldo: # carteira não existe
             return banco_pb2.ReplyLeSaldo(valor=-1)
         else: 
             return banco_pb2.ReplyLeSaldo(valor=saldo[request.carteira])
 
     def cria_ordem(self, request, context):
-        if request.carteira not in saldo:
+        if request.carteira not in saldo: # carteira não existe
             return banco_pb2.ReplyCriaOrdem(status=-1)
-        elif saldo[request.carteira] < request.valor:
+        elif saldo[request.carteira] < request.valor: # saldo insuficiente
             return banco_pb2.ReplyCriaOrdem(status=-2)
         else: 
             global ORDEM
@@ -33,11 +33,11 @@ class DoStuff(banco_pb2_grpc.DoStuffServicer):
             return banco_pb2.ReplyCriaOrdem(status=ORDEM-1)
         
     def transfere(self, request, context):
-        if request.ordem not in ordens:
+        if request.ordem not in ordens: # ordem não existe
             return banco_pb2.ReplyTransfere(status=-1)
-        elif ordens[request.ordem][0] != request.conferencia:
+        elif ordens[request.ordem][0] != request.conferencia: # valor incorreto
             return banco_pb2.ReplyTransfere(status=-2)
-        elif request.carteira not in saldo:
+        elif request.carteira not in saldo: # carteira destino não existe
             return banco_pb2.ReplyTransfere(status=-3)
         else:
             saldo[request.carteira] += request.conferencia

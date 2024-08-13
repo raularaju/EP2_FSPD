@@ -1,0 +1,4 @@
+make run_serv_banco arg1=8888 < carteiras.in
+make run_cli_banco arg1=a arg2=localhost:8888
+make run_serv_loja arg1=10 arg2=6666 arg3=loja arg4=localhost:8888
+make run_cli_loja arg1=b  arg2=localhost:8888 arg3=localhost:6666

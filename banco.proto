@@ -1,0 +1,50 @@
+/* Arquivo de definição da interface entre cliente e servidor
+ * Estamos usando a versão 3 de protocol buffers 
+ */
+syntax = "proto3";
+
+// Nome do pacote 
+package banco;
+
+service DoStuff {
+  rpc le_saldo(RequestLeSaldo) returns (ReplyLeSaldo) {}
+  rpc cria_ordem(RequestCriaOrdem) returns (ReplyCriaOrdem) {}
+  rpc transfere(RequestTransfere) returns (ReplyTransfere) {}
+  rpc termina_exec(RequestTerminaExec) returns (ReplyTerminaExec) {}
+}
+
+
+message RequestLeSaldo {
+    string carteira = 1;
+}
+
+message ReplyLeSaldo {
+    int32 valor = 1;
+}
+
+message RequestCriaOrdem {
+    string carteira = 1;
+    int32 valor = 2;
+}
+
+message ReplyCriaOrdem {
+    int32 status = 1;
+}
+
+message RequestTransfere {
+    int32 ordem = 1;
+    int32 conferencia = 2;
+    string carteira = 3;
+}
+
+message ReplyTransfere {
+    int32 status = 1;
+}
+
+message RequestTerminaExec {
+
+}
+
+message ReplyTerminaExec {
+    int32 n_pendencias = 1;
+}

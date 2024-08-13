@@ -1,0 +1,38 @@
+/* Arquivo de definição da interface entre cliente e servidor
+ * Estamos usando a versão 3 de protocol buffers 
+ */
+syntax = "proto3";
+
+// Nome do pacote 
+package loja;
+
+service DoStuff {
+  rpc le_preco(RequestLePreco) returns (ReplyLePreco) {}
+  rpc vender(RequestVender) returns (ReplyVender) {}
+  rpc termina_exec(RequestTerminaExec) returns (ReplyTerminaExec) {}
+}
+
+
+message RequestLePreco {
+}
+
+message ReplyLePreco {
+    int32 preco = 1;
+}
+
+message RequestVender {
+    int32 ordem = 1;
+}
+
+message ReplyVender {
+    int32 status = 1;
+}
+
+
+message RequestTerminaExec {
+
+}
+
+message ReplyTerminaExec {
+    int32 saldo = 1;
+}

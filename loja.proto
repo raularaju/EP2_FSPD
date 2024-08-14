@@ -1,9 +1,7 @@
-/* Arquivo de definição da interface entre cliente e servidor
- * Estamos usando a versão 3 de protocol buffers 
- */
+
 syntax = "proto3";
 
-// Nome do pacote 
+
 package loja;
 
 service Loja {
@@ -35,4 +33,5 @@ message RequestTerminaExec {
 
 message ReplyTerminaExec {
     int32 saldo = 1;
+    int32 n_pendencias = 2;
 }

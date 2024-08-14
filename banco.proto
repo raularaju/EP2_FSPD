@@ -1,9 +1,7 @@
-/* Arquivo de definição da interface entre cliente e servidor
- * Estamos usando a versão 3 de protocol buffers 
- */
+
 syntax = "proto3";
 
-// Nome do pacote 
+
 package banco;
 
 service Banco {

@@ -5,28 +5,48 @@ import grpc
 
 import banco_pb2, banco_pb2_grpc # módulos gerados pelo compilador de gRPC
 
-MINHA_CARTEIRA = None
+MINHA_CARTEIRA = None # nome da carteira do cliente
 
 def le_saldo(stub):
+    """
+    Lê o saldo da carteira
+    stub : stub do Banco
+    """
     response = stub.le_saldo(banco_pb2.RequestLeSaldo(carteira = MINHA_CARTEIRA))
-
-    print(f"Saldo Conta: {response.valor}")
+    print(f"{response.valor}")
 
 def cria_ordem(stub, valor):
+    """
+    Cria uma ordem de pagamento
+    stub : stub do Banco
+    valor : valor do pagamento
+    """
     response = stub.cria_ordem(banco_pb2.RequestCriaOrdem(carteira = MINHA_CARTEIRA, valor = valor))
-    print(f"Ordem criada: {response.status}")
+    print(f"{response.status}")
 
 def transfere(stub, opag, valor, destino):
+    """
+    Faz uma transferência
+    stub : stub do Banco
+    opag : número da ordem de pagamento
+    valor : valor da transferência
+    destino : carteira destino
+    """
     response = stub.transfere(banco_pb2.RequestTransfere(carteira = destino, ordem = opag, conferencia = valor))
-    print(f"Transferência: {response.status}")
+    print(f"{response.status}")
 
 def termina_exec(stub):
+    """
+    Termina do servidor de banco
+    stub : stub do Banco
+    """
     response = stub.termina_exec(banco_pb2.RequestTerminaExec())
-    print(f"Operações pendentes: {response.n_pendencias}")
+    print(f"{response.n_pendencias}")
 
 def processa_comandos(stub):
+    opcoes_validas = ['S', 'O', 'X', 'F']
     for line in sys.stdin:
-        if not line or not line.strip():
+        if not line or not line.strip() or line[0] not in opcoes_validas: # linha inválida
             continue
         operacao, *args = line.strip().split()
         if operacao == 'S':

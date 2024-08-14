@@ -5,38 +5,48 @@ import grpc
 
 import loja_pb2, loja_pb2_grpc, banco_pb2, banco_pb2_grpc # módulos gerados pelo compilador de gRPC
 
-MINHA_CARTEIRA = None
-PRECO_PRODUTO = 0
+MINHA_CARTEIRA = None # nome da carteira do cliente
+PRECO_PRODUTO = 0 
 
 def compra(stub_loja, stub_banco):
+    """
+    Faz uma compra na loja
+    stub_loja : stub da Loja
+    stub_banco : stub do Banco
+    """
     response = stub_banco.cria_ordem(banco_pb2.RequestCriaOrdem(carteira = MINHA_CARTEIRA, valor = PRECO_PRODUTO))
-    print(f"Ordem criada: {response.status}")
+    print(f"{response.status}")
     if response.status > 0:
         response = stub_loja.vender(loja_pb2.RequestVender(ordem = response.status))
-        print(f"Status Venda: {response.status}")
+        print(f"{response.status}")
 
 
-def termina_exec_loja(stub):
-    response = stub.termina_exec(loja_pb2.RequestTerminaExec())
-    print(f"Fim loja: {response.saldo}")
+def termina_exec(stub_loja):
+    """
+    Termina execução do vervidor da loja e do banco
+    stub_loja : stub da loja
+    """
+    response = stub_loja.termina_exec(loja_pb2.RequestTerminaExec())
+    print(f"{response.saldo} {response.n_pendencias}")
 
-def termina_exec_banco(stub):
-    response = stub.termina_exec(banco_pb2.RequestTerminaExec())
-    print(f"Fim banco: {response.n_pendencias}")
 
 def processa_comandos(stub_loja, stub_banco):
+    """
+    Processa os comandos da stdin
+    stub_loja : stub da Loja
+    stub_banco : stub do Banco
+    """
+    opcoes_validas = ['C', 'T']
     for line in sys.stdin:
-        if not line or not line.strip() or line.strip() == '':
+
+        if not line or not line.strip() or line.strip() == '' or line[0] not in opcoes_validas: # linha inválida
             continue
 
         operacao, *args = line.strip().split()
         if operacao == 'C':
             compra(stub_loja, stub_banco)
         elif operacao == 'T':
-            termina_exec_loja(stub_loja)
-            return
-        elif operacao == 'F':
-            termina_exec_banco(stub_banco)
+            termina_exec(stub_loja)
             return
 
 def run():
@@ -62,5 +72,3 @@ def run():
 
 if __name__ == '__main__':
     run()
-
-# python3 cli_loja.py Bezos 0.0.0.0:8888 0.0.0.0:8889

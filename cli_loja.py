@@ -26,6 +26,9 @@ def termina_exec_banco(stub):
 
 def processa_comandos(stub_loja, stub_banco):
     for line in sys.stdin:
+        if not line or not line.strip() or line.strip() == '':
+            continue
+
         operacao, *args = line.strip().split()
         if operacao == 'C':
             compra(stub_loja, stub_banco)
@@ -43,13 +46,13 @@ def run():
     MINHA_CARTEIRA = carteira
     
     channel_loja = grpc.insecure_channel(servidor_loja)
-    stub_loja = loja_pb2_grpc.DoStuffStub(channel_loja)
+    stub_loja = loja_pb2_grpc.LojaStub(channel_loja)
     response = stub_loja.le_preco(loja_pb2.RequestLePreco())
     global PRECO_PRODUTO
     PRECO_PRODUTO = response.preco
 
     channel_banco = grpc.insecure_channel(servidor_banco)
-    stub_banco = banco_pb2_grpc.DoStuffStub(channel_banco)
+    stub_banco = banco_pb2_grpc.BancoStub(channel_banco)
 
     processa_comandos(stub_loja, stub_banco)
     

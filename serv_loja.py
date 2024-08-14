@@ -9,7 +9,7 @@ MINHA_CARTEIRA = None
 MEU_SALDO = 0
 # Os procedimentos oferecidos aos clientes precisam ser encapsulados
 #   em uma classe que herda do código do stub.
-class DoStuff(loja_pb2_grpc.DoStuffServicer):
+class Loja(loja_pb2_grpc.LojaServicer):
     def __init__(self, stop_event, banco_stub):
         self._stop_event = stop_event
         self._banco_stub = banco_stub
@@ -41,14 +41,14 @@ def serve():
     global MEU_SALDO
 
     channel = grpc.insecure_channel(serv_banco)
-    stub_banco = banco_pb2_grpc.DoStuffStub(channel)
+    stub_banco = banco_pb2_grpc.BancoStub(channel)
     response = stub_banco.le_saldo(banco_pb2.RequestLeSaldo(carteira = MINHA_CARTEIRA))
     MEU_SALDO = response.valor
 
 
     stop_event = threading.Event()
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    loja_pb2_grpc.add_DoStuffServicer_to_server(DoStuff(stop_event, stub_banco), server)
+    loja_pb2_grpc.add_LojaServicer_to_server(Loja(stop_event, stub_banco), server)
     server.add_insecure_port(f'0.0.0.0:{port}')
     server.start()
     stop_event.wait()

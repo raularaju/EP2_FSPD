@@ -6,7 +6,7 @@ syntax = "proto3";
 // Nome do pacote 
 package banco;
 
-service DoStuff {
+service Banco {
   rpc le_saldo(RequestLeSaldo) returns (ReplyLeSaldo) {}
   rpc cria_ordem(RequestCriaOrdem) returns (ReplyCriaOrdem) {}
   rpc transfere(RequestTransfere) returns (ReplyTransfere) {}

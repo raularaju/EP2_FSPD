@@ -6,7 +6,7 @@ syntax = "proto3";
 // Nome do pacote 
 package loja;
 
-service DoStuff {
+service Loja {
   rpc le_preco(RequestLePreco) returns (ReplyLePreco) {}
   rpc vender(RequestVender) returns (ReplyVender) {}
   rpc termina_exec(RequestTerminaExec) returns (ReplyTerminaExec) {}

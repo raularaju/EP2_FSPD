@@ -26,6 +26,8 @@ def termina_exec(stub):
 
 def processa_comandos(stub):
     for line in sys.stdin:
+        if not line or not line.strip():
+            continue
         operacao, *args = line.strip().split()
         if operacao == 'S':
             le_saldo(stub)
@@ -43,7 +45,7 @@ def run():
     MINHA_CARTEIRA = carteira
     
     channel = grpc.insecure_channel(servidor)
-    stub = banco_pb2_grpc.DoStuffStub(channel)
+    stub = banco_pb2_grpc.BancoStub(channel)
 
 
     processa_comandos(stub)
